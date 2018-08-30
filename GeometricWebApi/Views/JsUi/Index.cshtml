@@ -1,0 +1,57 @@
+﻿
+@{
+	ViewBag.Title = "JavaScript UI";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+	function SendPoints() {
+		var v1X = document.getElementById('pointV1x').value;
+		var v1Y = document.getElementById('pointV1y').value;
+		var v2X = document.getElementById('pointV2x').value;
+		var v2Y = document.getElementById('pointV2y').value;
+		var v3X = document.getElementById('pointV3x').value;
+		var v3Y = document.getElementById('pointV3y').value;
+		$(function () {
+			$.ajax({
+				url: "/api/Geometric", //api/Geometric?v1x={v1x}&v1y={v1y}&v2x={v2x}&v2y={v2y}&v3x={v3x}&v3y={v3y}
+				type: "GET",
+				dataType: 'json',
+				data: { v1x: v1X, v1y: v1Y, v2x: v2X, v2y: v2Y, v3x: v3X, v3y: v3Y },
+				success: function (data) {
+					$("#response")[0].innerText = 'Row: ' + data.Row + '\nColumn: ' + data.Column;
+				},
+				error: function (xqr, errorMessage) {
+					alert(errorMessage);
+				}
+			});
+		});
+	}
+</script>
+<div class="row">
+	<h2>JavaScript UI</h2>
+	<div class="col-xs-5">
+		<div>
+			<label for="pointV1x">v1 X:</label><input type="number" id="pointV1x" class="point" />
+			<label for="pointV1y">v1 Y:</label><input type="number" id="pointV1y" class="point" />
+		</div>
+		<div>
+			<label for="pointV2x">v2 X:</label><input type="number" id="pointV2x" class="point" />
+			<label for="pointV2y">v2 Y:</label><input type="number" id="pointV2y" class="point" />
+		</div>
+		<div>
+			<label for="pointV3x">v3 X:</label><input type="number" id="pointV3x" class="point" />
+			<label for="pointV3y">v3 Y:</label><input type="number" id="pointV3y" class="point" />
+		</div>
+		<div>
+			<button id="sendPoints" onclick="SendPoints();">Submit Points</button>
+		</div>
+		<div>
+			<textarea id="response" rows="4" cols="30"></textarea>
+		</div>
+	</div>
+	<div class="col-xs-7">
+		<img src="/Images/bottom-point-example.png" width="250" alt="Bottom (Odd) Triangle Example Points" />
+		<img src="/Images/top-point-example.png" width="250" alt="Top (Even) Triangle Example Points" />
+	</div>
+</div>
