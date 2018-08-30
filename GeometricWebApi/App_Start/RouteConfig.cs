@@ -14,12 +14,6 @@ namespace GeometricWebApi
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
 			routes.MapRoute(
-				name: "Geometric",
-				url: "geo/{row}/{column}",
-				defaults: new {controller = "geo", row = "A", column = "1"}
-			);
-
-			routes.MapRoute(
 				name: "Default",
 				url: "{controller}/{action}/{id}",
 				defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

@@ -11,7 +11,7 @@ namespace GeometricWebApi.Models
 		private static Dictionary<KeyValuePair<string, string>, Triangle> _allTriangles;
 		private const int Width = 10;
 		private const int Height = 10;
-		private static readonly int[] XValues = Enumerable.Range(1, 12).Select(i => (i - ((i % 2 == 0) ? 2 : 1)) * Width).ToArray();
+		private static readonly int[] XValues = Enumerable.Range(1, 12).Select(i => (((i % 2 == 0) ? (i / 2) - 1 : (i - 1) / 2)) * Width).ToArray();
 		private static readonly Dictionary<string, int> YValues = new Dictionary<string, int>
 		{
 			{"A", 0 * Height},
@@ -23,8 +23,7 @@ namespace GeometricWebApi.Models
 		};
 		public string Row { get; set; }
 		public int Column { get; set; }
-		public bool IsTop { get; }
-		public bool IsBottom => !IsTop;
+		public bool IsTop => ((Column % 2) == 0);
 
 		public Point A => new Point(XValues[Column - 1], YValues[Row]);
 
@@ -32,15 +31,29 @@ namespace GeometricWebApi.Models
 
 		public Point C => new Point(A.X + Width, A.Y + Height);
 
+		public string ErrorMessage { get; set; }
+
 		public Triangle(string row, string column)
 		{
 			Row = row.ToUpper();
-			var isParsed = int.TryParse(column, out var col);
-			Column = col;
-			if (isParsed)
-				IsTop = col % 2 == 0;
-			else
-				throw new ArgumentOutOfRangeException(nameof(column), "Invalid column value.");
+			if (YValues.ContainsKey(Row)) {
+				var isParsed = int.TryParse(column, out var col);
+				if (!isParsed)
+					throw new ArgumentOutOfRangeException(nameof(column), "Invalid numeric value.");
+				Column = col;
+				if (Column > 12 || Column < 1) {
+					throw new ArgumentOutOfRangeException(nameof(column), "Invalid numeric value. Out of range.");
+				}
+			} else {
+				throw new ArgumentOutOfRangeException(nameof(row), "Invalid row value.");
+			}
+		}
+
+		public Triangle(string errorMessage)
+		{
+			Row = "E";
+			Column = 1;
+			ErrorMessage = $"Error: {errorMessage}";
 		}
 
 		public static Dictionary<KeyValuePair<string, string>, Triangle> GetAllTriangles()

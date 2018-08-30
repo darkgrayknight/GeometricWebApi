@@ -13,7 +13,11 @@ namespace GeometricWebApi.Controllers
     {
 	    public Triangle Get(string row, string column)
 	    {
-			return new Triangle(row, column);
+		    try {
+			    return new Triangle(row, column);
+		    } catch (ArgumentOutOfRangeException e) {
+			    return new Triangle($"{e.Message}");
+		    }
 	    }
 
 	    public RowColumn Get(int v1x, int v1y, int v2x, int v2y, int v3x, int v3y)
