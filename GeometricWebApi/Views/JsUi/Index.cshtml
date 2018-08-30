@@ -1,10 +1,31 @@
-﻿
-@{
+﻿@{
 	ViewBag.Title = "JavaScript UI";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <script type="text/javascript">
+	function SendRowColumn() {
+		var aRow = document.getElementById('row').value;
+		var aColumn = document.getElementById('column').value;
+		$(function () {
+			$.ajax({
+				url: "/api/Geometric", //api/Geometric?row={row}&column={column}
+				type: "GET",
+				dataType: 'json',
+				data: { row: aRow, column: aColumn },
+				success: function (data) {
+					var outText = $("#verticesReturned")[0];
+					if (data.ErrorMessage === null) {
+						outText.innerText = 'V1x, V1y: ' + data.B + '\nV2x, V2y: ' + data.A + '\nV3x, V3y: ' + data.C;
+					} else {
+						outText.innerText = data.ErrorMessage;
+					}
+				},
+				error: function (xqr, errorMessage) {
+					alert(errorMessage);
+				}
+			});
+		});
+	}
 	function SendPoints() {
 		var v1X = document.getElementById('pointV1x').value;
 		var v1Y = document.getElementById('pointV1y').value;
@@ -28,20 +49,48 @@
 		});
 	}
 </script>
+<div class="jumbotron">
+	<h1>JavaScript UI</h1>
+	<p class="lead">Here is a JavaScript UI to the Geometric Web API.</p>
+</div>
 <div class="row">
-	<h2>JavaScript UI</h2>
+	<h2>
+		Part I - Get vertices for given row (A-F) and column (1-12)
+	</h2>
 	<div class="col-xs-5">
 		<div>
-			<label for="pointV1x">v1 X:</label><input type="number" id="pointV1x" class="point" />
-			<label for="pointV1y">v1 Y:</label><input type="number" id="pointV1y" class="point" />
+			<label for="row">Row:</label><input type="text" id="row" class="arow" />
 		</div>
 		<div>
-			<label for="pointV2x">v2 X:</label><input type="number" id="pointV2x" class="point" />
-			<label for="pointV2y">v2 Y:</label><input type="number" id="pointV2y" class="point" />
+			<label for="column">Column:</label><input type="text" id="column" class="acolumn" />
 		</div>
 		<div>
-			<label for="pointV3x">v3 X:</label><input type="number" id="pointV3x" class="point" />
-			<label for="pointV3y">v3 Y:</label><input type="number" id="pointV3y" class="point" />
+			<button id="sendRowColumn" onclick="SendRowColumn();">Submit Row/Column</button>
+		</div>
+		<div>
+			<textarea id="verticesReturned" rows="4" cols="30"></textarea>
+		</div>
+	</div>
+	<div class="col-xs-7">
+	</div>
+</div>
+<hr />
+<div class="row">
+	<h2>
+		Part II - Get row and column for a given set of vertices
+	</h2>
+	<div class="col-xs-5">
+		<div>
+			<label for="pointV1x">V1x:</label><input type="number" id="pointV1x" class="point" />
+			<label for="pointV1y">V1y:</label><input type="number" id="pointV1y" class="point" />
+		</div>
+		<div>
+			<label for="pointV2x">V2x:</label><input type="number" id="pointV2x" class="point" />
+			<label for="pointV2y">V2y:</label><input type="number" id="pointV2y" class="point" />
+		</div>
+		<div>
+			<label for="pointV3x">V3x:</label><input type="number" id="pointV3x" class="point" />
+			<label for="pointV3y">V3y:</label><input type="number" id="pointV3y" class="point" />
 		</div>
 		<div>
 			<button id="sendPoints" onclick="SendPoints();">Submit Points</button>

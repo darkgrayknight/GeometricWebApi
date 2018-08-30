@@ -185,7 +185,6 @@
     <Compile Include="Controllers\GeometricController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JsUiController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
